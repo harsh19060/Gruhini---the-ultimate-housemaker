@@ -1,0 +1,1 @@
+package com.household.app.repository; import com.household.app.entity.ShoppingListItem; import org.springframework.data.jpa.repository.JpaRepository; import java.util.*; public interface ShoppingRepository extends JpaRepository<ShoppingListItem,Long>{List<ShoppingListItem> findAllByOrderByCreatedAtDesc();}

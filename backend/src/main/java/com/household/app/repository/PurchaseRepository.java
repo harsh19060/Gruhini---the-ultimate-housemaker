@@ -1,0 +1,1 @@
+package com.household.app.repository; import com.household.app.entity.Purchase; import org.springframework.data.jpa.repository.JpaRepository; import java.util.*; public interface PurchaseRepository extends JpaRepository<Purchase,Long>{List<Purchase> findTop100ByOrderByPurchasedAtDesc();}

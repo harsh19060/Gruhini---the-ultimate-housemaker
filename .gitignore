@@ -1,0 +1,10 @@
+
+backend/target/
+.env
+.env.*
+!.env.example
+application-local.properties
+.vscode/
+.idea/
+*.class
+backend/src/main/resources/application.properties
