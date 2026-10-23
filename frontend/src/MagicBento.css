@@ -1,0 +1,51 @@
+.magic-bento { display: contents; }
+
+.magic-bento-card {
+  --mb-x: -999px;
+  --mb-y: -999px;
+  --mb-hot: 0;
+  --mb-glow: 206, 106, 133;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--mb-radius, 20px) !important;
+  transition: transform .28s cubic-bezier(.22, 1, .36, 1), box-shadow .28s ease;
+}
+
+.magic-bento-card::before,
+.magic-bento-card::after {
+  position: absolute;
+  z-index: 0;
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+}
+
+.magic-bento-card::before {
+  inset: 0;
+  opacity: calc(var(--mb-hot) * var(--mb-spotlight, 1));
+  background: radial-gradient(var(--mb-spotlight-radius, 300px) circle at var(--mb-x) var(--mb-y), rgba(var(--mb-glow), .21), rgba(var(--mb-glow), .08) 34%, transparent 70%);
+  transition: opacity .22s ease;
+}
+
+.magic-bento-card::after {
+  inset: 0;
+  padding: 1px;
+  opacity: calc(var(--mb-hot) * var(--mb-border-glow, 1));
+  background: radial-gradient(calc(var(--mb-spotlight-radius, 300px) * .72) circle at var(--mb-x) var(--mb-y), rgba(255, 201, 183, .95), rgba(var(--mb-glow), .68) 30%, transparent 66%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: opacity .22s ease;
+}
+
+.magic-bento-card > * { position: relative; z-index: 1; }
+.magic-bento-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(92, 55, 76, .18), 0 0 0 1px rgba(206, 106, 133, .13); }
+
+.magic-bento-wave::before { animation: magic-bento-wave .75s ease-out; }
+@keyframes magic-bento-wave { 0% { opacity: .6; background-size: 0 0; } 100% { opacity: 0; background-size: 200% 200%; } }
+
+.theme-dark .magic-bento-card { --mb-glow: 250, 162, 117; }
+.theme-dark .magic-bento-card:hover { box-shadow: 0 17px 35px rgba(8, 3, 8, .35), 0 0 0 1px rgba(250, 162, 117, .22); }
+
+@media (prefers-reduced-motion: reduce) { .magic-bento-card, .magic-bento-card::before, .magic-bento-card::after { transition: none; animation: none; } }

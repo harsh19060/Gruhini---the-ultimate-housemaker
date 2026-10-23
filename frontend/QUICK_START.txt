@@ -1,0 +1,18 @@
+GRIHINI — THE ULTIMATE HOUSEMAKER — QUICK START (WINDOWS 11)
+
+1. Extract household-consumables-frontend.zip.
+2. Install a recent Node.js LTS version if npm is not available.
+3. Open the extracted folder in VS Code.
+4. Open Terminal > New Terminal.
+5. Run:
+
+   npm install
+   npm run dev
+
+6. Open the localhost URL printed by Vite, usually http://localhost:5173.
+
+For presentation flow, open DEMO_SCRIPT.md.
+
+IMPORTANT: The current app is an interactive DEMO MODE prototype. It stores sample changes in browser localStorage. The UI for receipt OCR, barcode lookup, WhatsApp NLU, predictions and ESP32 readings is demonstrative until the corresponding backend endpoints/services are integrated. Do not describe these mocked screens as live integrations.
+
+When the Spring Boot API contract is ready, configure VITE_API_BASE_URL in a local .env file, then connect each screen to the actual backend endpoints.
