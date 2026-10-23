@@ -1,81 +1,172 @@
-# HomeStock — Household Consumables Manager
+# 🏡 Gruhini — Smart Household Consumables Management System
 
-Full-stack starter app for one household: inventory, purchases, expenses, shopping list, consumption history and ESP32 smart-scale API. Stack: Java 21, Spring Boot 3.4, Spring Data JPA/Hibernate, MySQL, React + Vite.
+**A smart inventory management system for everyday household essentials.**
 
-## Requirements
-- Java 21+
-- Maven 3.9+
-- MySQL 8+
-- Node.js 20+
+Gruhini helps users track household stock, record purchases and expenses, monitor consumption, and manage shopping lists. The project is designed to support future IoT-based inventory tracking using RFID and weight sensors.
 
-## 1. Start MySQL
-Create the database (optional; the JDBC URL also has `createDatabaseIfNotExist=true`):
+---
+
+## ✨ Features
+
+- 📦 **Inventory Management** — Add, update, search, and delete household items.
+- 📊 **Dashboard** — View inventory summaries, recent spending, and stock valuation.
+- 🛒 **Purchase Tracking** — Record purchases and update item stock.
+- 💰 **Expense Management** — Maintain household expense records.
+- ⚖️ **Consumption Tracking** — Record consumption events using weight measurements.
+- 🚨 **Low-Stock Monitoring** — Identify items that may need replenishment.
+- 📝 **Shopping List** — Add items, update completion status, and remove entries.
+- 🏷️ **Barcode Lookup** — Find inventory items using their barcode.
+- 📡 **IoT-Ready Design** — Backend endpoint prepared for hardware-based consumption reporting.
+
+## 🧰 Tech Stack
+
+| Component | Technology |
+|---|---|
+| Backend | Java 17, Spring Boot |
+| API | Spring Web, REST |
+| Database | MySQL |
+| Persistence | Spring Data JPA |
+| Frontend | React, Vite |
+| Hardware (planned/integration work) | ESP32, HX711 load cell amplifier, 5 kg load cell, RC522 RFID reader |
+| Version Control | Git and GitHub |
+
+## 🏗️ Project Structure
+
+```text
+household-consumables/
+├── backend/
+│   ├── src/main/java/
+│   │   └── com/household/app/
+│   │       ├── config/
+│   │       ├── controller/
+│   │       ├── dto/
+│   │       ├── entity/
+│   │       ├── repository/
+│   │       └── service/
+│   ├── src/main/resources/
+│   └── pom.xml
+├── frontend/
+│   ├── src/
+│   │   ├── main.jsx
+│   │   └── style.css
+│   ├── index.html
+│   └── package.json
+├── .gitignore
+└── README.md
+```
+
+## ⚙️ Prerequisites
+
+Install the following before running the project:
+
+- Java JDK 17
+- Maven
+- MySQL Server
+- Node.js and npm
+- Git
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/harsh19060/Gruhini---the-ultimate-housemaker.git
+cd Gruhini---the-ultimate-housemaker
+```
+
+### 2. Configure MySQL
+
+Create the database:
 
 ```sql
 CREATE DATABASE household_consumables;
 ```
 
-Set credentials before starting backend. Linux/macOS:
+Configure the database connection in your local Spring Boot configuration. Set your MySQL username and password using your own local credentials.
+
+**Security:** Never commit database passwords, API keys, or other secrets to GitHub.
+
+### 3. Run the backend
+
+Open a terminal in the `backend` directory:
 
 ```bash
-export DB_USERNAME=root
-export DB_PASSWORD='your_mysql_password'
-cd backend
+mvn clean compile
 mvn spring-boot:run
 ```
 
-Windows PowerShell:
+The backend uses port `8080` by default, unless configured otherwise.
 
-```powershell
-$env:DB_USERNAME='root'
-$env:DB_PASSWORD='your_mysql_password'
-cd backend
-mvn spring-boot:run
-```
+### 4. Run the frontend
 
-Backend runs at `http://localhost:8080`. Test `GET http://localhost:8080/api/health`. Hibernate creates tables from JPA entities using `ddl-auto=update` for local development.
-
-## 2. Start React
-In a second terminal:
+Open another terminal in the `frontend` directory:
 
 ```bash
-cd frontend
 npm install
 npm run dev
 ```
 
-Open the URL Vite prints (normally `http://localhost:5173`). If backend uses another URL, create `frontend/.env` with `VITE_API_URL=http://localhost:8080/api`.
+Open the local URL printed by Vite in the terminal.
 
-## REST API
-- `GET /api/health`
-- `GET /api/dashboard`
-- `GET /api/items?q=rice`, `POST /api/items`, `GET /api/items/{id}`, `PUT /api/items/{id}`, `DELETE /api/items/{id}`
-- `POST /api/items/{id}/stock-adjustments` — positive quantity adds stock; negative quantity subtracts stock (cannot go below zero)
-- `GET/POST /api/purchases` — purchase creates purchase record and adds quantity to stock
-- `GET/POST /api/expenses`
-- `GET /api/consumption`
-- `POST /api/hardware/consumption` — JSON example below
-- `GET/POST /api/shopping-list`, `PATCH /api/shopping-list/{id}/toggle`, `DELETE /api/shopping-list/{id}`
-- `GET /api/lookup/barcode/{barcode}`
+## 🔌 API Overview
 
-### ESP32 consumption request
-```json
-{
-  "rfidUid": "F7:FC:51:63",
-  "initialWeightGrams": 1000,
-  "finalWeightGrams": 750,
-  "eventKey": "esp32-session-unique-id"
-}
-```
-Backend maps known RFID UID to an item, calculates `initial-final`, checks available stock, and updates stock + event in one transaction. `eventKey` must be unique per completed session; retrying the same key is rejected to avoid double deductions. Final weight greater than or equal to initial weight is rejected as non-consumption/refill.
+The backend provides REST endpoints for the following operations:
 
-Known starter mappings: `F7:FC:51:63` Sugar, `60:7D:08:55` Tea, `BC:CA:7E:09` Rice. Edit item RFID UID in inventory if needed. RFID UID normalization is uppercase.
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Check backend health |
+| GET | `/api/dashboard` | Retrieve dashboard data |
+| GET | `/api/items` | List or search inventory items |
+| GET | `/api/items/{id}` | Retrieve an item |
+| POST | `/api/items` | Create an item |
+| PUT | `/api/items/{id}` | Update an item |
+| DELETE | `/api/items/{id}` | Delete an item |
+| GET | `/api/purchases` | View purchase history |
+| POST | `/api/purchases` | Record a purchase |
+| GET | `/api/expenses` | View expenses |
+| POST | `/api/expenses` | Record an expense |
+| GET | `/api/consumption` | View consumption history |
+| POST | `/api/hardware/consumption` | Submit a hardware consumption event |
+| GET | `/api/shopping-list` | View shopping list |
+| POST | `/api/shopping-list` | Add a shopping-list item |
+| PATCH | `/api/shopping-list/{id}/toggle` | Toggle item completion |
+| DELETE | `/api/shopping-list/{id}` | Remove a shopping-list item |
+| GET | `/api/lookup/barcode/{barcode}` | Look up an item by barcode |
 
-## Current scope and honest limitations
-- Manual inventory, purchase, expense and shopping-list flows are implemented.
-- Dashboard shows inventory, low-stock count, recent recorded spend and estimated stock value. Spend currently sums the latest 100 purchases and latest 100 expenses, not a date-filtered monthly report.
-- Barcode can be typed or scanned by a USB/Bluetooth scanner that behaves like a keyboard. A camera-based scanner UI is not included yet.
-- Receipt OCR and WhatsApp are documented integration points, not live integrations; provider credentials and parsing/confirmation workflow are not configured.
-- No login is included because this is the requested single-household local app. Do not expose it to the public internet as-is.
-- `ddl-auto=update` is for development only. Use Flyway/Liquibase migrations, backups, authentication and API protection before production deployment.
-- For smart-scale accuracy, calibrate HX711, tare correctly, ensure load is routed through the load cell, and send a unique event only after the RFID session has been validated. Current ESP32 firmware still needs Wi-Fi HTTP client code to post to the endpoint.
+Additional endpoints include stock adjustments and item updates. See the backend controller for the complete implementation.
+
+## 📡 IoT Integration — Planned Hardware
+
+Gruhini is designed to support a smart weighing and identification workflow:
+
+1. An RFID reader identifies the household item.
+2. A load cell connected through the HX711 measures its weight.
+3. The ESP32 processes the weight readings.
+4. The device reports a consumption event to the backend.
+5. The backend records the event and updates inventory.
+
+Hardware integration depends on the corresponding device firmware and configuration being completed.
+
+## 🔮 Future Enhancements
+
+- Complete ESP32 and RFID hardware integration.
+- Automatic low-stock notifications.
+- Improved purchase and expense analytics.
+- More robust validation and error handling.
+- Authentication and user-specific household inventories.
+- Automated testing and deployment.
+
+## 🔐 Security Notes
+
+- Keep local credentials outside version control.
+- Do not publish real database passwords or personal information.
+- Configure production credentials through environment variables or a secure secrets manager.
+
+## 👨‍💻 Author
+
+**Harsh**  
+GitHub: [@harsh19060](https://github.com/harsh19060)
+
+## 📄 License
+
+This project is distributed under the MIT License. See the `LICENSE` file for details.
