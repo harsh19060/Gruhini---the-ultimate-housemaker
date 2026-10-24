@@ -1,4 +1,4 @@
-# 🏡 Gruhini — Smart Household Consumables Management System
+# Gruhini — Smart Household Consumables Management System
 
 **A smart inventory management system for everyday household essentials.**
 
